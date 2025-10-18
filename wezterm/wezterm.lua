@@ -38,6 +38,7 @@ config.force_reverse_video_cursor = true
 config.initial_rows = 45
 config.initial_cols = 180
 config.window_decorations = "RESIZE"
+-- config.integrated_title_buttons = { 'Close' }
 config.window_background_opacity = opacity
 config.window_background_image = (os.getenv("WEZTERM_CONFIG_FILE") or ""):gsub("wezterm.lua", "bg-blurred.png")
 config.window_close_confirmation = "NeverPrompt"
@@ -50,7 +51,7 @@ config.cursor_blink_rate = 250
 
 -- Tab Bar Configuration
 config.enable_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.show_tab_index_in_tab_bar = false
 config.use_fancy_tab_bar = false
 config.colors.tab_bar = {
