@@ -1,0 +1,339 @@
+watch_stylesheet: true
+watch_config: true
+debug: false
+update_check: true
+komorebi:
+  start_command: "komorebic start --whkd"
+  stop_command: "komorebic stop --whkd"
+  reload_command: "komorebic reload-configuration"
+bars:
+  primary-bar:
+    enabled: true
+    screens: ["*"]
+    class_name: "yasb-bar"
+    alignment:
+      position: "top"
+      center: false
+    padding:
+      top: 10
+      left: 10
+    window_flags:
+      always_on_top: false
+      windows_app_bar: false
+      hide_on_fullscreen: true
+    widgets:
+      left:
+        - "weather"
+        - memory
+        - "cpu"
+        - "traffic"
+        - "clock"
+        - "media"
+      center:
+        - "komorebi_active_layout"
+        - "komorebi_workspaces"
+      right:
+        - "systray"
+        - "wallpapers"
+        - "clock"
+
+widgets:
+  traffic:
+    type: "yasb.traffic.TrafficWidget"
+    options:
+      label: "<span class='download'>\udb81\udf2e {download_speed}</span><span class='upload'>{upload_speed} \udb81\udf37</span>"
+      update_interval: 1000
+      menu:
+        round_corners: false
+        alignment: "center"
+        direction: "down"
+        offset_top: true
+      callbacks:
+        on_left: "toggle_menu"
+        on_right: "do_nothing"
+      container_padding:
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
+      label_shadow:
+        enabled: true
+        color: "black"
+        radius: 5
+        offset: [0, 0]
+  cpu:
+    type: "yasb.cpu.CpuWidget"
+    options:
+      label: "<span>\uf4bc</span> {info[percent][total]}%"
+      label_alt: "{info[histograms][cpu_percent]}"
+      update_interval: 1000
+      histogram_icons:
+        - '\u2581' # 0%
+        - '\u2581' # 10%
+        - '\u2582' # 20%
+        - '\u2583' # 30%
+        - '\u2584' # 40%
+        - '\u2585' # 50%
+        - '\u2586' # 60%
+        - '\u2587' # 70%
+        - '\u2588' # 80%+
+      histogram_num_columns: 8
+      callbacks:
+        on_left: "toggle_cpu_menu"
+        on_middle: "exec cmd /c Taskmgr"
+        on_right: "toggle_label"
+  memory:
+    type: "yasb.memory.MemoryWidget"
+    options:
+      label: "<span>\uefc5</span> {virtual_mem_used}/{virtual_mem_total}"
+      update_interval: 5000
+      callbacks:
+        on_left: "do_nothing"
+        on_middle: "do_nothing"
+        on_right: "do_nothing"
+  weather:
+    type: "yasb.weather.WeatherWidget"
+    options:
+      label: "<span>{icon}</span> {temp}"
+      label_alt: "{location}: Min {min_temp}, Max {max_temp}, Humidity {humidity}"
+      api_key: "f5bc02da05ce44f0b29231930251207" # Get your free API key from https://www.weatherapi.com/
+      show_alerts: true
+      tooltip: true
+      update_interval: 600 # Update interval in seconds, Min 600 seconds
+      hide_decimal: true
+      units: "metric" # Can be 'metric' or 'imperial'
+      location: "Arrah, Bihar, In" # You can use "USA Los Angeles 90006" {COUNTRY CITY ZIP_CODE}, or just city.
+      callbacks:
+        on_left: "toggle_card"
+        on_middle: "do_nothing"
+        on_right: "toggle_label"
+      icons:
+        sunnyDay: "\ue30d"
+        clearNight: "\ue32b"
+        cloudyDay: "\ue312"
+        cloudyNight: "\ue311"
+        rainyDay: "\ue308"
+        rainyNight: "\ue333"
+        snowyDay: "\ue30a"
+        snowyNight: "\ue335"
+        blizzardDay: "\udb83\udf36"
+        blizzardNight: "\udb83\udf36"
+        foggyDay: "\ue303"
+        foggyNight: "\ue346"
+        thunderstormDay: "\ue30f"
+        thunderstormNight: "\ue338"
+        default: "\uebaa"
+      weather_card:
+        blur: true
+        round_corners: true
+        round_corners_type: "normal"
+        border_color: "system"
+        alignment: "right"
+        direction: "down"
+        icon_size: 64
+        show_hourly_forecast: true # Set to False to disable hourly forecast
+        time_format: "24h" # can be 12h or 24h
+        hourly_point_spacing: 76
+        hourly_icon_size: 32 # better to set 16, 32 or 64 for better quality
+        icon_smoothing: true # should be true for smoother icon or false for sharper icon if using 16, 32 or 64 for hourly_icon_size
+        temp_line_width: 2 # can be 0 to hide the temperature line
+        current_line_color: "#8EAEE8"
+        current_line_width: 1 # can be 0 to hide the current hour line
+        current_line_style: "dot"
+        hourly_gradient:
+          enabled: false
+          top_color: "#8EAEE8"
+          bottom_color: "#2A3E68"
+        hourly_forecast_buttons: # Optional hourly forecast data type toggle buttons, default disabled
+          enabled: true # Set to false to hide the buttons
+          default_view: "temperature" # Default view when opening the weather card. Options: "temperature", "rain", "snow"
+          temperature_icon: "\udb81\udd99"
+          rain_icon: "\udb81\udd96"
+          snow_icon: "\udb81\udd98"
+        weather_animation:
+          enabled: false
+          snow_overrides_rain: true
+          temp_line_animation_style: both # can be "rain", "snow", "both", or "none"
+          rain_effect_intensity: 1.0 # 0.01 - 10.0
+          snow_effect_intensity: 1.0 # 0.01 - 10.0
+          scale_with_chance: true
+          enable_debug: false  
+
+  clock:
+    type: "yasb.clock.ClockWidget"
+    options:
+      label: "{ %I:%M %p | It's %A %d %B, %Y}"
+      update_interval: 1000
+      calendar:
+        blur: true
+        round_corners: false
+        alignment: "center"
+        direction: "down"
+        offset_top: true
+      callbacks:
+        on_left: "toggle_calendar"
+        on_right: "do_nothing"
+      container_padding:
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
+      label_shadow:
+        enabled: false
+        color: "black"
+        radius: 5
+        offset: [0, 0] 
+  
+  media:
+    type: "yasb.media.MediaWidget"
+    options:
+      label: "{title}{s}{artist}"
+      label_alt: "{title}"
+      separator: " - "
+      hide_empty: true
+      callbacks:
+        on_left: "toggle_label"
+        on_middle: "do_nothing"
+        on_right: "do_nothing"
+      max_field_size:
+        label: 20
+        label_alt: 30
+      show_thumbnail: true
+      controls_only: false
+      controls_left: true
+      controls_hide: false
+      thumbnail_alpha: 80
+      thumbnail_padding: 8
+      thumbnail_corner_radius: 16
+      icons:
+        prev_track: "\ue892"
+        next_track: "\ue893"
+        play: "\ue768"
+        pause: "\ue769"
+      media_menu:
+        blur: false
+        round_corners: true
+        round_corners_type: "normal"
+        border_color: "system"
+        alignment: "right"
+        direction: "down"
+        offset_top: 6
+        offset_left: 0
+        thumbnail_corner_radius: 8
+        thumbnail_size: 120
+        max_title_size: 60
+        max_artist_size: 20
+        show_source: true
+      media_menu_icons:
+        play: "\ue768"
+        pause: "\ue769"
+        prev_track: "\ue892"
+        next_track: "\ue893"
+      scrolling_label:
+        enabled: false
+        update_interval_ms: 33
+        style: "left"  # can be "left", "right", "bounce", "bounce-ease"
+        separator: " | "
+        label_padding: 0
+        always_scroll: false
+        # Easing curve params: https://www.desmos.com/calculator/j7eamemxzi
+        ease_slope: 20
+        ease_pos: 0.8
+        ease_min: 0.5  
+  
+  komorebi_workspaces:
+    type: "komorebi.workspaces.WorkspaceWidget"
+    options:
+      label_offline: "Komorebi Offline"
+      label_workspace_btn: "{index}"
+      label_workspace_active_btn: "{index}"
+      label_workspace_populated_btn: "{index}"
+      label_default_name: ""
+      label_zero_index: false
+      hide_empty_workspaces: true
+      hide_if_offline: false
+      toggle_workspace_layer:
+        enabled: false
+        tiling_label: "Tiling"
+        floating_label: "Floating"
+      app_icons: 
+        enabled_populated: false
+        enabled_active: false
+        size: 12
+        max_icons: 0
+        hide_label: false
+        hide_duplicates: false
+        hide_floating: false
+  komorebi_active_layout:
+    type: "komorebi.active_layout.ActiveLayoutWidget"
+    options:
+      hide_if_offline: true
+      label: "{icon}"
+      layouts:
+        - "bsp"
+        - "columns"
+        - "rows"
+        - "grid"
+        - "scrolling"
+        - "vertical_stack"
+        - "horizontal_stack"
+        - "ultrawide_vertical_stack"
+        - "right_main_vertical_stack"
+      layout_icons:
+        bsp: "\uebeb"
+        columns: "\uebf7"
+        rows: "\uec01"
+        grid: "\udb81\udf58"
+        scrolling: "\uebf7"
+        vertical_stack: "\uebee"
+        horizontal_stack: "\uebf0"
+        ultrawide_vertical_stack: "\uebee"
+        right_main_vertical_stack: "\uebf1"
+        monocle: "\uf50c"
+        maximized: "\uf06f"
+        floating: "\uf2d2"
+        paused: "\udb83\udf89"
+        tiling: "\udb81\ude40"
+      callbacks:
+        on_left: "toggle_layout_menu"
+        on_middle: "toggle_tiling"
+        on_right: "next_layout"
+      layout_menu:
+        blur: true
+        round_corners: false
+        alignment: "left"
+        direction: "down"
+        offset_top: true
+        show_layout_icons: true
+
+  wallpapers:
+    type: "yasb.wallpapers.WallpapersWidget"
+    options:
+      label: "<span>\udb83\ude09</span>"
+      image_path: C:\Users\mrdot\OneDrive\Pictures\Wallpapers  # Example path to folder with images
+      change_automatically: false # Automatically change wallpaper
+      update_interval: 60 # If change_automatically is true, update interval in seconds
+      gallery:
+          enabled: true
+          blur: true
+          image_width: 220
+          image_per_page: 8
+          show_buttons: true
+          orientation: "portrait"
+          image_spacing: 8
+          lazy_load: true
+          lazy_load_delay: 80
+          lazy_load_fadein: 400
+          image_corner_radius: 20
+          enable_cache: true
+  systray:
+    type: "yasb.systray.SystrayWidget"
+    options:
+      class_name: "systray"
+      label_collapsed: "\ue893"
+      label_expanded: "\udb80\udd56"
+      show_unpinned: false
+      show_unpinned_button: true
+      show_battery: false
+      show_volume: false
+      show_network: false
