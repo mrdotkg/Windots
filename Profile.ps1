@@ -345,4 +345,3 @@ Import-Module -Name CompletionPredictor
 if ([Environment]::GetCommandLineArgs().Contains("-NonInteractive")) {
     return
 }
-fastfetch
